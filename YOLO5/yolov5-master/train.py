@@ -414,6 +414,10 @@ if __name__ == '__main__':
     parser.add_argument('--logdir', type=str, default='runs/', help='logging directory')
     parser.add_argument('--workers', type=int, default=0, help='maximum number of dataloader workers')#windows的同学别改
     opt = parser.parse_args()
+    
+    # 处理空的weights参数
+    if opt.weights == '':
+        opt.weights = 'yolov5s.pt'  # 使用默认预训练权重
 
     # Set DDP variables WORLD_SIZE：进程数 RANK：进程编号
     opt.total_batch_size = opt.batch_size
