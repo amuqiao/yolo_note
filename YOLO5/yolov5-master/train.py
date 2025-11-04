@@ -66,7 +66,7 @@ def train(hyp, opt, device, tb_writer=None):
     if pretrained:#有预训练模型的话，会自动下载，最好在github下载好 然后放到对应位置
         with torch_distributed_zero_first(rank):
             attempt_download(weights)  # download if not found locally
-        ckpt = torch.load(weights, map_location=device)  # load checkpoint
+        ckpt = torch.load(weights, map_location=device, weights_only=False)  # load checkpoint
         if hyp.get('anchors'):
             ckpt['model'].yaml['anchors'] = round(hyp['anchors'])  # force autoanchor
         model = Model(opt.cfg or ckpt['model'].yaml, ch=3, nc=nc).to(device)  # create

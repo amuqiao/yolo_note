@@ -369,7 +369,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         # Check cache #可以设置缓存，再训练就不用一个个读了
         cache_path = str(Path(self.label_files[0]).parent) + '.cache'  # cached labels
         if os.path.isfile(cache_path):
-            cache = torch.load(cache_path)  # load
+            cache = torch.load(cache_path, weights_only=False)  # load
             if cache['hash'] != get_hash(self.label_files + self.img_files):  # dataset changed
                 cache = self.cache_labels(cache_path)  # re-cache
         else:

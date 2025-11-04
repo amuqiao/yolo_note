@@ -3,6 +3,7 @@ import math
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from utils.general import non_max_suppression
 
 
@@ -24,13 +25,16 @@ class Conv(nn.Module):
         super(Conv, self).__init__()
         self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=False)
         self.bn = nn.BatchNorm2d(c2)
-        self.act = nn.Hardswish() if act else nn.Identity()
+        self.act = True if act is True else False
 
     def forward(self, x):
-        return self.act(self.bn(self.conv(x)))
+        x = self.conv(x)
+        x = self.bn(x)
+        return F.hardswish(x) if self.act else x
 
     def fuseforward(self, x):
-        return self.act(self.conv(x))
+        x = self.conv(x)
+        return F.hardswish(x) if self.act else x
 
 
 class Bottleneck(nn.Module):
